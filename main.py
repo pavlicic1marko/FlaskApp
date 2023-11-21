@@ -9,9 +9,7 @@ users = {"users": [{"name": "marko", "age": 12}, {"name": "wewe", "age": 132}]}
 
 @app.route("/")
 def index():
-    return jsonify({
-        "api_stuff": "values",
-    })
+    return render_template('index.html')
 
 
 @app.errorhandler(404)
