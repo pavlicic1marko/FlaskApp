@@ -27,6 +27,10 @@ def users():
 def hello():
     return 'Hello, World'
 
+@app.route('/test')
+def test():
+    return jsonify({"users": "test"})
+
 @app.route('/user/<username>')
 def show_user_profile(username):
     # show the user profile for that user
