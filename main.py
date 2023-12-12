@@ -70,6 +70,14 @@ def cars():
         car_list.append(new_obj)
         return jsonify(car_list),201
 
+@app.route('/cars/<int:id>', methods=['GET','PUT','DELETE'])
+def single_car(id):
+    if request.method == 'GET':
+        for car in car_list:
+            if car['id']==id:
+                return jsonify(car)
+        return 'car does not exist', 404
+
 
 
 
