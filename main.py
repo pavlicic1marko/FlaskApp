@@ -78,6 +78,22 @@ def single_car(id):
                 return jsonify(car)
         return 'car does not exist', 404
 
+    if request.method == 'DELETE':
+        for car in car_list:
+            if car['id']==id:
+                car_list.remove(car)
+                return jsonify(car_list)
+        return 'car does not exist', 404
+
+    if request.method == 'PUT':
+        for car in car_list:
+            if car['id'] == id:
+                car['model'] = request.form['model']
+                car['price'] = request.form['price']
+                return jsonify(car_list)
+        return 'car does not exist', 404
+
+
 
 
 
