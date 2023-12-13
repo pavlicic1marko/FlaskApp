@@ -1,12 +1,21 @@
 from flask import Flask, jsonify, render_template, request
 from markupsafe import escape
 import random
+import sqlite3
 
 
 app = Flask(__name__, template_folder='templates')
 
 users = {"users": [{"name": "marko", "age": 12}, {"name": "wewe", "age": 132}]}
-car_list =[
+
+def database_connection():
+    conn = None
+    try:
+        conn = sqlite3.connect('cars.sqlite')
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+'''car_list =[
     {
     "id":0,
     "model":"BMW-RT",
@@ -18,7 +27,7 @@ car_list =[
     "model":"BMW-XC",
     "price":"20"
     }
-]
+]'''
 
 @app.route("/")
 def index():
@@ -51,24 +60,31 @@ def show_user_profile(username):
 
 @app.route('/cars', methods=['GET','POST'])
 def cars():
+    conn = database_connection()
+    cursor =conn.cursor()
     if request.method == 'GET':
-        if len(car_list)>0:
-            return jsonify(car_list)
-        else:
-            return 'no cars found', 404
+        cursor = conn.execute("SELECT * FROM cars")
+        cars = [
+            dict(id=row[0], model=row[1], price=row[2])
+            for row in cursor.fetchall()
+        ]
+        if len(cars)==0:
+            return 'no cars exist',200
+        if cars is not None:
+            return jsonify(cars)
+
 
     if request.method == 'POST':
-        new_id = random.randint(1000, 2000)
         new_model = request.form['model']
         new_price = request.form['price']
+        sql = """INSERT INTO cars (model, price) VALUES (?, ?)"""
 
-        new_obj = {
-            'id': new_id,
-            'model': new_model,
-            'price': new_price
-        }
-        car_list.append(new_obj)
-        return jsonify(car_list),201
+        cursor = cursor.execute(sql, (new_model,new_price))
+        conn.commit()
+        return f"Car with the id: {cursor.lastrowid} created sucessfully"
+
+
+
 
 @app.route('/cars/<int:id>', methods=['GET','PUT','DELETE'])
 def single_car(id):
