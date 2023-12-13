@@ -88,26 +88,32 @@ def cars():
 
 @app.route('/cars/<int:id>', methods=['GET','PUT','DELETE'])
 def single_car(id):
+    conn = database_connection()
+    cursor = conn.cursor()
+    car = None
     if request.method == 'GET':
-        for car in car_list:
-            if car['id']==id:
-                return jsonify(car)
-        return 'car does not exist', 404
+        cursor.execute("SELECT * FROM cars WHERE id=?",(id,))
+        rows = cursor.fetchall()
+        for r in rows:
+            car = r
+        if car is not None:
+            return jsonify(car), 200
+        elif len(rows)==0:
+            return "no cars"
+        else:
+            return "car does not exist or there is an error"
+    if request.method == 'PUT':
+        sql = """UPDATE cars SET model=?, price=? WHERE id=?"""
+        new_model = request.form['model']
+        new_price = request.form['price']
+        conn.execute(sql, (new_model, new_price, id))
+        conn.commit()
+        return 'request is sent to db' #TODO return what was changed
 
     if request.method == 'DELETE':
-        for car in car_list:
-            if car['id']==id:
-                car_list.remove(car)
-                return jsonify(car_list)
-        return 'car does not exist', 404
-
-    if request.method == 'PUT':
-        for car in car_list:
-            if car['id'] == id:
-                car['model'] = request.form['model']
-                car['price'] = request.form['price']
-                return jsonify(car_list)
-        return 'car does not exist', 404
+        sql = """DELETE FROM cars WHERE id=?"""
+        conn.execute(sql, (id,))
+        return "the car is deleted"
 
 
 
