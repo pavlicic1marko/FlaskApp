@@ -1,15 +1,25 @@
 from flask import Flask, jsonify, render_template, request
 from markupsafe import escape
 import sqlite3
+import psycopg2
 
 app = Flask(__name__, template_folder='templates')
 
 
-def database_connection():
+def database_connection_sqlite():
     conn = None
     try:
         conn = sqlite3.connect('cars.sqlite')
     except sqlite3.Error as e:
+        print(e)
+    return conn
+
+
+def database_connection_postgresql():
+    conn = None
+    try:
+        conn = psycopg2.connect(host="localhost", dbname="FlaskCars", user="postgres", password="admin123", port="5432")
+    except psycopg2.Error as e:
         print(e)
     return conn
 
@@ -38,7 +48,7 @@ def show_user_profile(username):
 
 @app.route('/cars', methods=['GET', 'POST'])
 def cars():
-    conn = database_connection()
+    conn = database_connection_sqlite()
     cursor = conn.cursor()
     if request.method == 'GET':
         cursor = conn.execute("SELECT * FROM cars")
@@ -63,7 +73,7 @@ def cars():
 
 @app.route('/cars/<int:car_id>', methods=['GET', 'PUT', 'DELETE'])
 def single_car(car_id):
-    conn = database_connection()
+    conn = database_connection_sqlite()
     cursor = conn.cursor()
     car = None
     if request.method == 'GET':
