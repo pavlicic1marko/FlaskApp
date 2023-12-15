@@ -1,7 +1,5 @@
 import random
-
 from flask import Flask, jsonify, render_template, request
-from markupsafe import escape
 import sqlite3
 import psycopg2
 
@@ -43,7 +41,11 @@ def test():
     cursor = conn.cursor()
     if request.method == 'GET':
         cursor.execute("SELECT * FROM cars")
-        return cursor.fetchall()
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return results
+
 
     if request.method == 'POST':
         new_model = request.form['model']
@@ -52,7 +54,10 @@ def test():
                        (random.randint(100000000, 900000000), new_model, new_price,))
         conn.commit()
         cursor.execute("SELECT * FROM cars")
-        return cursor.fetchall()
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return results
 
 
 @app.route('/test/<int:car_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -63,25 +68,29 @@ def test_get_one_car(car_id):
         cursor.execute("""DELETE FROM cars WHERE id= %s""", (car_id,))
         conn.commit()
         cursor.execute("SELECT * FROM cars")
-        return cursor.fetchall()
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return results
 
     if request.method == 'GET':
         cursor.execute("""SELECT * FROM cars WHERE id = %s""", (car_id,))
-        return cursor.fetchall()
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return results
+
     if request.method == 'PUT':
         new_model = request.form['model']
         new_price = request.form['price']
         cursor.execute("""UPDATE cars SET model=%s, price=%s WHERE id=%s""", ( new_model, new_price, car_id))
         conn.commit()
         cursor.execute("SELECT * FROM cars")
-        return cursor.fetchall()
-        pass
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return results
 
-
-@app.route('/user/<username>')
-def show_user_profile(username):
-    # show the user profile for that user
-    return f'User {escape(username)}'
 
 
 @app.route('/cars', methods=['GET', 'POST'])
