@@ -1,3 +1,5 @@
+import random
+
 from flask import Flask, jsonify, render_template, request
 from markupsafe import escape
 import sqlite3
@@ -35,9 +37,45 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route('/test')
+@app.route('/test', methods=['GET', 'POST'])
 def test():
-    return jsonify({"users": "testss"})
+    conn = database_connection_postgresql()
+    cursor = conn.cursor()
+    if request.method == 'GET':
+        cursor.execute("SELECT * FROM cars")
+        return cursor.fetchall()
+
+    if request.method == 'POST':
+        new_model = request.form['model']
+        new_price = request.form['price']
+        cursor.execute("""INSERT INTO cars (id,model, price) VALUES (%s, %s, %s)""",
+                       (random.randint(100000000, 900000000), new_model, new_price,))
+        conn.commit()
+        cursor.execute("SELECT * FROM cars")
+        return cursor.fetchall()
+
+
+@app.route('/test/<int:car_id>', methods=['GET', 'PUT', 'DELETE'])
+def test_get_one_car(car_id):
+    conn = database_connection_postgresql()
+    cursor = conn.cursor()
+    if request.method == 'DELETE':
+        cursor.execute("""DELETE FROM cars WHERE id= %s""", (car_id,))
+        conn.commit()
+        cursor.execute("SELECT * FROM cars")
+        return cursor.fetchall()
+
+    if request.method == 'GET':
+        cursor.execute("""SELECT * FROM cars WHERE id = %s""", (car_id,))
+        return cursor.fetchall()
+    if request.method == 'PUT':
+        new_model = request.form['model']
+        new_price = request.form['price']
+        cursor.execute("""UPDATE cars SET model=%s, price=%s WHERE id=%s""", ( new_model, new_price, car_id))
+        conn.commit()
+        cursor.execute("SELECT * FROM cars")
+        return cursor.fetchall()
+        pass
 
 
 @app.route('/user/<username>')
