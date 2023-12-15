@@ -35,17 +35,16 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route('/test', methods=['GET', 'POST'])
+@app.route('/cars', methods=['GET', 'POST'])
 def test():
     conn = database_connection_postgresql()
     cursor = conn.cursor()
     if request.method == 'GET':
         cursor.execute("SELECT * FROM cars")
-        results = cursor.fetchall()
+        results = cursor.fetchall() #TODO, if len()== 0 return 'there are no cars'
         cursor.close()
         conn.close()
         return results, 200
-
 
     if request.method == 'POST':
         new_model = request.form['model']
@@ -53,14 +52,14 @@ def test():
         cursor.execute("""INSERT INTO cars (id,model, price) VALUES (%s, %s, %s)""",
                        (random.randint(100000000, 900000000), new_model, new_price,))
         conn.commit()
-        cursor.execute("SELECT * FROM cars")
+        cursor.execute("SELECT * FROM cars") #TODO, Get created car
         results = cursor.fetchall()
         cursor.close()
         conn.close()
         return results, 201
 
 
-@app.route('/test/<int:car_id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/cars/<int:car_id>', methods=['GET', 'PUT', 'DELETE'])
 def test_get_one_car(car_id):
     conn = database_connection_postgresql()
     cursor = conn.cursor()
@@ -75,7 +74,7 @@ def test_get_one_car(car_id):
 
     if request.method == 'GET':
         cursor.execute("""SELECT * FROM cars WHERE id = %s""", (car_id,))
-        results = cursor.fetchall()
+        results = cursor.fetchall() #TODO if len()==0 return 'no results'
         cursor.close()
         conn.close()
         return results, 200
@@ -83,9 +82,9 @@ def test_get_one_car(car_id):
     if request.method == 'PUT':
         new_model = request.form['model']
         new_price = request.form['price']
-        cursor.execute("""UPDATE cars SET model=%s, price=%s WHERE id=%s""", ( new_model, new_price, car_id))
+        cursor.execute("""UPDATE cars SET model=%s, price=%s WHERE id=%s""", (new_model, new_price, car_id))
         conn.commit()
-        cursor.execute("SELECT * FROM cars")
+        cursor.execute("SELECT * FROM cars") #TODO get car by id
         results = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -93,60 +92,9 @@ def test_get_one_car(car_id):
 
 
 
-@app.route('/cars', methods=['GET', 'POST'])
-def cars():
-    conn = database_connection_sqlite()
-    cursor = conn.cursor()
-    if request.method == 'GET':
-        cursor = conn.execute("SELECT * FROM cars")
-        car_list = [
-            dict(id=row[0], model=row[1], price=row[2])
-            for row in cursor.fetchall()
-        ]
-        if len(car_list) == 0:
-            return 'no cars exist', 200
-        if car_list is not None:
-            return jsonify(car_list)
-
-    if request.method == 'POST':
-        new_model = request.form['model']
-        new_price = request.form['price']
-        sql = """INSERT INTO cars (model, price) VALUES (?, ?)"""
-
-        cursor = cursor.execute(sql, (new_model, new_price))
-        conn.commit()
-        return f"Car with the id: {cursor.lastrowid} created sucessfully"
 
 
-@app.route('/cars/<int:car_id>', methods=['GET', 'PUT', 'DELETE'])
-def single_car(car_id):
-    conn = database_connection_sqlite()
-    cursor = conn.cursor()
-    car = None
-    if request.method == 'GET':
-        cursor.execute("SELECT * FROM cars WHERE id=?", (car_id,))
-        rows = cursor.fetchall()
-        for r in rows:
-            car = r
-        if car is not None:
-            return jsonify(car), 200
-        elif len(rows) == 0:
-            return "no cars"
-        else:
-            return "car does not exist or there is an error"
-    if request.method == 'PUT':
-        sql = """UPDATE cars SET model=?, price=? WHERE id=?"""
-        new_model = request.form['model']
-        new_price = request.form['price']
-        conn.execute(sql, (new_model, new_price, car_id))
-        conn.commit()
-        return 'request is sent to db'  # TODO return what was changed
 
-    if request.method == 'DELETE':
-        sql = """DELETE FROM cars WHERE id=?"""
-        conn.execute(sql, (car_id,))
-        conn.commit()
-        return "the car is deleted"
 
 
 if __name__ == '__main__':
