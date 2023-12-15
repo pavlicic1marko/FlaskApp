@@ -44,7 +44,7 @@ def test():
         results = cursor.fetchall()
         cursor.close()
         conn.close()
-        return results
+        return results, 200
 
 
     if request.method == 'POST':
@@ -57,7 +57,7 @@ def test():
         results = cursor.fetchall()
         cursor.close()
         conn.close()
-        return results
+        return results, 201
 
 
 @app.route('/test/<int:car_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -78,7 +78,7 @@ def test_get_one_car(car_id):
         results = cursor.fetchall()
         cursor.close()
         conn.close()
-        return results
+        return results, 200
 
     if request.method == 'PUT':
         new_model = request.form['model']
