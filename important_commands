@@ -1,0 +1,4 @@
+python -m app run
+docker build --tag flask-docker .
+docker images
+docker run -p 5000:5000 flask-docker
