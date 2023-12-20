@@ -1,0 +1,9 @@
+services:
+  web1:
+    build: .
+    ports:
+      - "8000:5000"
+  web2:
+    build: .
+    ports:
+      - "8001:5000"
