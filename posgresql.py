@@ -10,10 +10,11 @@ cur.execute("""CREATE TABLE IF NOT EXISTS cars(
 );    
 """)
 
-'''cur.execute("""INSERT INTO cars (id, model, price) VALUES
+cur.execute("""INSERT INTO cars (id, model, price) VALUES
 (1, 'Audi-123',100),
 (2, 'GM-44x',200)
-""")'''
+ON CONFLICT DO NOTHING 
+""")
 
 cur.execute("""SELECT * FROM cars WHERE model= %s;""", ('GM-44x',))
 print(cur.fetchone())

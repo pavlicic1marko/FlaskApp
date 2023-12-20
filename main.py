@@ -24,15 +24,12 @@ def database_connection_postgresql():
     return conn
 
 
-@app.route("/")
-def index():
-    return render_template('index.html')
-
-
+"""
 @app.errorhandler(404)
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html'), 404
+"""
 
 
 @app.route('/cars', methods=['GET', 'POST'])
@@ -41,7 +38,7 @@ def test():
     cursor = conn.cursor()
     if request.method == 'GET':
         cursor.execute("SELECT * FROM cars")
-        results = cursor.fetchall() #TODO, if len()== 0 return 'there are no cars'
+        results = cursor.fetchall()  # TODO, if len()== 0 return 'there are no cars'
         cursor.close()
         conn.close()
         return results, 200
@@ -52,7 +49,7 @@ def test():
         cursor.execute("""INSERT INTO cars (id,model, price) VALUES (%s, %s, %s)""",
                        (random.randint(100000000, 900000000), new_model, new_price,))
         conn.commit()
-        cursor.execute("SELECT * FROM cars") #TODO, Get created car
+        cursor.execute("SELECT * FROM cars")  # TODO, Get created car
         results = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -74,7 +71,7 @@ def test_get_one_car(car_id):
 
     if request.method == 'GET':
         cursor.execute("""SELECT * FROM cars WHERE id = %s""", (car_id,))
-        results = cursor.fetchall() #TODO if len()==0 return 'no results'
+        results = cursor.fetchall()  # TODO if len()==0 return 'no results'
         cursor.close()
         conn.close()
         return results, 200
@@ -84,17 +81,11 @@ def test_get_one_car(car_id):
         new_price = request.form['price']
         cursor.execute("""UPDATE cars SET model=%s, price=%s WHERE id=%s""", (new_model, new_price, car_id))
         conn.commit()
-        cursor.execute("SELECT * FROM cars") #TODO get car by id
+        cursor.execute("SELECT * FROM cars")  # TODO get car by id
         results = cursor.fetchall()
         cursor.close()
         conn.close()
         return results
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
