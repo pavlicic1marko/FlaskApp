@@ -3,3 +3,8 @@ services:
     build: ./random_number_services/generator
     ports:
       - "5000:5000"
+
+  web11:
+    build: ./random_number_services/display
+    ports:
+      - "5001:5000"
