@@ -1,0 +1,5 @@
+services:
+  web10:
+    build: ./random_number_services/generator
+    ports:
+      - "5000:5000"
