@@ -4,7 +4,7 @@ from urllib3.exceptions import NewConnectionError
 
 app = Flask(__name__)
 
-random_microservice_url = "http://127.0.0.1:5001/"
+random_microservice_url = "http://generator:5000/"
 
 
 # Calling the random number generator microservice
