@@ -1,0 +1,22 @@
+services:
+  web14:
+    build: ./random_number_services/generator
+    container_name: "generator"
+    networks:
+      - network1
+    ports:
+      - "5000:5000"
+
+
+  web15:
+    build: ./random_number_services/display
+    container_name: "display"
+    networks:
+      - network1
+    ports:
+      - "5050:5050"
+
+networks:
+  network1:
+    name: my-pre-existing-network
+    external: true

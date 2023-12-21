@@ -2,3 +2,7 @@ python -m app run
 docker build --tag flask-docker .
 docker images
 docker run -p 5000:5000 flask-docker
+docker network ls
+docker network inspect bridge
+docker network create my-pre-existing-network
+docker-compose up
