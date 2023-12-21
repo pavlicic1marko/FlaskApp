@@ -1,10 +1,10 @@
 services:
-  web10:
+  web12:
     build: ./random_number_services/generator
     ports:
       - "5000:5000"
 
-  web11:
+  web13:
     build: ./random_number_services/display
     ports:
-      - "5001:5000"
+      - "5050:5050"
