@@ -1,9 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
     {% for user in user_data %}
-        <h1> {{ user.name }} </h1>
-        <p> {{user.age}} years old </p>
-        <p> with user id: {{user.id}} </p>
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="#">{{ user.name }}</a>
+          <small class="text-muted">{{ user.id }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ user.name }}</a></h2>
+        <p class="article-content">{{ user.id }}</p>
+      </div>
+    </article>
     {% endfor %}
 {% endblock content %}
 

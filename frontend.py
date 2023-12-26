@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 app = Flask(__name__, template_folder='templates')
 random_microservice_url = "http://127.0.0.1:5000"
@@ -20,7 +20,7 @@ def about_page():
 
 def get_user_data():
     response = requests.get(random_microservice_url)
-    return [response.json()]
+    return response.json()
 
 
 if __name__ == '__main__':
