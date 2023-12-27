@@ -23,7 +23,7 @@ def about_page():
     return render_template('about.html', user_data=user_data, title='BEST')
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET','POST'])
 def register():
     form = RegistrationForm()
     return render_template('register.html', titl='Register', form=form)
