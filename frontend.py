@@ -2,6 +2,10 @@ import requests
 from flask import Flask, render_template, url_for
 
 app = Flask(__name__, template_folder='templates')
+from forms import RegistrationForm, LoginForm
+# protect against cookie modification
+app.config['SECRET_KEY'] = 'v34erjlb8o37444rrrr934gfriyf3'
+
 random_microservice_url = "http://127.0.0.1:5000"
 
 
