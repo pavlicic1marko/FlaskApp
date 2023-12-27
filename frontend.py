@@ -4,7 +4,7 @@ from flask import Flask, render_template, url_for
 app = Flask(__name__, template_folder='templates')
 from forms import RegistrationForm, LoginForm
 
-# protect against cookie modification
+# protect against cookie modification, csrf tokens
 app.config['SECRET_KEY'] = 'v34erjlb8o37444rrrr934gfriyf3'
 
 random_microservice_url = "http://127.0.0.1:5000"
@@ -30,9 +30,10 @@ def register():
 
 
 @app.route('/login')
-def register():
-    form = RegistrationForm()
-    return render_template('login.html', titl='Login', form=form)
+def login():
+    pass
+    #form = RegistrationForm()
+    #return render_template('login.html', titl='Login', form=form)
 
 
 def get_user_data():
