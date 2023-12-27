@@ -3,6 +3,7 @@ from flask import Flask, render_template, url_for
 
 app = Flask(__name__, template_folder='templates')
 from forms import RegistrationForm, LoginForm
+
 # protect against cookie modification
 app.config['SECRET_KEY'] = 'v34erjlb8o37444rrrr934gfriyf3'
 
@@ -20,6 +21,18 @@ def main_page():
 def about_page():
     user_data = get_user_data()
     return render_template('about.html', user_data=user_data, title='BEST')
+
+
+@app.route('/register')
+def register():
+    form = RegistrationForm()
+    return render_template('register.html', titl='Register', form=form)
+
+
+@app.route('/login')
+def register():
+    form = RegistrationForm()
+    return render_template('login.html', titl='Login', form=form)
 
 
 def get_user_data():
