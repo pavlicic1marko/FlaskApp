@@ -36,6 +36,12 @@ def register():
 def login():
     pass
     form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'test@test.com':
+            flash('You are now logged in','success')
+            return  redirect(url_for('home'))
+        else:
+            flash('Wrong password or email','danger')
     return render_template('login.html', titl='Login', form=form)
 
 
