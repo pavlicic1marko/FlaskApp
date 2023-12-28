@@ -18,7 +18,7 @@ def home():
 
 
 @app.route('/about', methods=['GET'])
-def about_page():
+def about():
     user_data = get_user_data()
     return render_template('about.html', user_data=user_data, title='BEST')
 
