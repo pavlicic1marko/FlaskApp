@@ -10,6 +10,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notifications.sqlite'
 # create database instance
 db = SQLAlchemy()
 db.init_app(app)
+
+
 class Notifications(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(40), nullable=False)
@@ -18,6 +20,13 @@ class Notifications(db.Model):
 
     def __repr__(self):
         return f"User('{self.title}','{self.text}')"
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'text': self.text,
+        }
 
 
 with app.app_context():
@@ -34,8 +43,9 @@ def generate_user():
 
 @app.route("/notifications/all", methods=['GET'])
 def set_notifications():
-    all_users = Notifications.query.all()
-    return all_users
+    all_notifications = Notifications.query.all()
+    result = [notification.serialize() for notification in all_notifications]
+    return jsonify(result)
 
 
 @app.route("/notifications/create", methods=['POST'])
