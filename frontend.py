@@ -1,6 +1,6 @@
 import requests
 from flask import Flask, render_template, url_for, flash, redirect, request, jsonify
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, News
 
 app = Flask(__name__, template_folder='templates')
 
@@ -18,16 +18,17 @@ def home():
     return render_template('test.html', user_data=user_data, title='BEST')
 
 
-@app.route('/about', methods=['GET', 'POST'])
-def about():
-    form = LoginForm()
+@app.route('/news', methods=['GET', 'POST'])
+def news():
+    form = News()
     if request.method == 'POST':
-        email = form.email.data
-        response = requests.post(backend, data={"password": email})
+        title = form.title.data
+        text = form.text.data
+        response = requests.post(backend, data={"title": title,"text": text})
         return response.json()
 
     user_data = get_user_data()
-    return render_template('about.html', user_data=user_data, title='BEST', form=form)
+    return render_template('news.html', user_data=user_data, title='News', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
