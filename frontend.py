@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'v34erjlb8o37444rrrr934gfriyf3'
 
 random_microservice_url = "http://127.0.0.1:5000"
-backend = "http://127.0.0.1:5000/users/change"
+backend = "http://127.0.0.1:5000/api/notifications"
 
 
 @app.route('/', methods=['GET'])
@@ -25,7 +25,8 @@ def news():
         title = form.title.data
         text = form.text.data
         response = requests.post(backend, data={"title": title, "text": text})
-        return response.json()
+        return render_template('notifications.html', notifications_data=response.json(), title='Notifications', form=form)
+
 
     if request.method == 'GET':
 

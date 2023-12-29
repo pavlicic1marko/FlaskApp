@@ -11,7 +11,7 @@ news = [{"title": "GDP jumps 10 times", "text": "GDP of astocka hase increased 1
 def generate_user():
     return users
 
-@app.route("/users/change", methods=['GET','POST'])
+@app.route("/api/notifications", methods=['GET','POST'])
 def users_change():
     if request.method == 'POST':
         title = request.form['title']
