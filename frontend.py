@@ -1,13 +1,14 @@
 import requests
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, flash, redirect, request, jsonify
+from forms import RegistrationForm, LoginForm
 
 app = Flask(__name__, template_folder='templates')
-from forms import RegistrationForm  ,  LoginForm
 
 # protect against cookie modification, csrf tokens
 app.config['SECRET_KEY'] = 'v34erjlb8o37444rrrr934gfriyf3'
 
 random_microservice_url = "http://127.0.0.1:5000"
+backend = "http://127.0.0.1:5000/users/change"
 
 
 @app.route('/', methods=['GET'])
@@ -17,10 +18,16 @@ def home():
     return render_template('test.html', user_data=user_data, title='BEST')
 
 
-@app.route('/about', methods=['GET'])
+@app.route('/about', methods=['GET', 'POST'])
 def about():
+    form = LoginForm()
+    if request.method == 'POST':
+        email = form.email.data
+        response = requests.post(backend, data={"password": email})
+        return response.json()
+
     user_data = get_user_data()
-    return render_template('about.html', user_data=user_data, title='BEST')
+    return render_template('about.html', user_data=user_data, title='BEST', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -34,14 +41,13 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    pass
     form = LoginForm()
     if form.validate_on_submit():
         if form.email.data == 'test@test.com':
-            flash('You are now logged in','success')
-            return  redirect(url_for('home'))
+            flash('You are now logged in', 'success')
+            return redirect(url_for('home'))
         else:
-            flash('Wrong password or email','danger')
+            flash('Wrong password or email', 'danger')
     return render_template('login.html', titl='Login', form=form)
 
 
