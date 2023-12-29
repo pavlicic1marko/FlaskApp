@@ -41,19 +41,16 @@
 						</div>
 				</form>
 			</div>
-			<div>
 					{% for user in user_data %}
 					<article class="media content-section">
 					  <div class="media-body">
 						<div class="article-metadata">
-						  <a class="mr-2" href="#">{{ user.name }}</a>
-						  <small class="text-muted">{{ user.id }}</small>
+						  <a class="mr-2" href="#">{{ user.title }}</a>
+						  <small class="text-muted">{{ user.text }}</small>
 						</div>
-						<h2><a class="article-title" href="#">{{ user.name }}</a></h2>
-						<p class="article-content">{{ user.id }}</p>
+						<h2><a class="article-title" href="#">{{ user.title }}</a></h2>
+						<p class="article-content">{{ user.text }}</p>
 					  </div>
 					</article>
 					{% endfor %}
-			</div>
-
 {% endblock content %}

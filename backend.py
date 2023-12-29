@@ -11,13 +11,17 @@ news = [{"title": "GDP jumps 10 times", "text": "GDP of astocka hase increased 1
 def generate_user():
     return users
 
-@app.route("/users/change", methods=['POST'])
+@app.route("/users/change", methods=['GET','POST'])
 def users_change():
-    title = request.form['title']
-    text = request.form['text']
-    news.append({"title": title, "text": text})
+    if request.method == 'POST':
+        title = request.form['title']
+        text = request.form['text']
+        news.append({"title": title, "text": text})
+        return make_response(jsonify(news), 200)
 
-    return make_response(jsonify(news), 200)
+    if request.method == 'GET':
+        return make_response(jsonify(news), 200)
+
 
 if __name__ == "__main__":
     app.run(port=5000)

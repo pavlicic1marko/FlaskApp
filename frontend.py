@@ -24,11 +24,13 @@ def news():
     if request.method == 'POST':
         title = form.title.data
         text = form.text.data
-        response = requests.post(backend, data={"title": title,"text": text})
+        response = requests.post(backend, data={"title": title, "text": text})
         return response.json()
 
-    user_data = get_user_data()
-    return render_template('news.html', user_data=user_data, title='News', form=form)
+    if request.method == 'GET':
+
+        news_list = get_news_list()
+        return render_template('news.html', user_data=news_list, title='News', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -56,6 +58,9 @@ def get_user_data():
     response = requests.get(random_microservice_url)
     return response.json()
 
+def get_news_list():
+    response = requests.get(backend)
+    return response.json()
 
 if __name__ == '__main__':
     app.run(debug=True, port=80)
