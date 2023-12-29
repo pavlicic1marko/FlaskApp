@@ -18,7 +18,7 @@ def home():
     return render_template('test.html', user_data=user_data, title='BEST')
 
 
-@app.route('/news', methods=['GET', 'POST'])
+@app.route('/notifications', methods=['GET', 'POST'])
 def news():
     form = News()
     if request.method == 'POST':
@@ -29,8 +29,8 @@ def news():
 
     if request.method == 'GET':
 
-        news_list = get_news_list()
-        return render_template('news.html', user_data=news_list, title='News', form=form)
+        notifications_list = get_notifications_list()
+        return render_template('notifications.html', notifications_data=notifications_list, title='Notifications', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -58,7 +58,7 @@ def get_user_data():
     response = requests.get(random_microservice_url)
     return response.json()
 
-def get_news_list():
+def get_notifications_list():
     response = requests.get(backend)
     return response.json()
 

@@ -1,11 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
-            <h1> NEWS </h1>
             <div class="content-section">
 				<form method="POST" action="">
 					{{ form.hidden_tag() }}
 					<fieldset class="form-group">
-						<legend class="border-bottom mb-4">Join today</legend>
+						<legend class="border-bottom mb-4">Add new Notifications</legend>
 							<div class="form-group">
 								{{ form.title.label(class="form-control-label") }}
 
@@ -41,15 +40,13 @@
 						</div>
 				</form>
 			</div>
-					{% for user in user_data %}
+            <h1> Notifications: </h1>
+
+					{% for notification in notifications_data %}
 					<article class="media content-section">
 					  <div class="media-body">
-						<div class="article-metadata">
-						  <a class="mr-2" href="#">{{ user.title }}</a>
-						  <small class="text-muted">{{ user.text }}</small>
-						</div>
-						<h2><a class="article-title" href="#">{{ user.title }}</a></h2>
-						<p class="article-content">{{ user.text }}</p>
+						<h2 class="article-title" >{{ notification.title }}</h2>
+						<p class="article-content">{{ notification.text }}</p>
 					  </div>
 					</article>
 					{% endfor %}
