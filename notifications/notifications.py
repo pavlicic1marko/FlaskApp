@@ -31,6 +31,11 @@ class Notifications(db.Model):
 
 with app.app_context():
     db.create_all()
+    notifications = Notifications()
+    notifications.title = 'starttest1title'
+    notifications.text = 'starttext2test'
+    db.session.add(notifications)
+    db.session.commit()
 
 users = [{"name": "marko", "age": "33", "id": "123153765"}, {"name": "marko", "age": "33", "id": "123153765"}]
 news = [{"title": "GDP jumps 10 times", "text": "GDP of astocka hase increased 10 times"}]
