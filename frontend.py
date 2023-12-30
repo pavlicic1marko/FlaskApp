@@ -27,7 +27,6 @@ def news():
         response = requests.post(backend, data={"title": title, "text": text})
         return render_template('notifications.html', notifications_data=response.json(), title='Notifications', form=form)
 
-
     if request.method == 'GET':
 
         notifications_list = get_notifications_list()
@@ -59,9 +58,11 @@ def get_user_data():
     response = requests.get(random_microservice_url)
     return response.json()
 
+
 def get_notifications_list():
     response = requests.get(backend)
     return response.json()
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=80)
