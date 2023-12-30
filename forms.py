@@ -19,5 +19,5 @@ class LoginForm(FlaskForm):
 
 class News(FlaskForm):
     title = StringField('title', validators=[DataRequired()])
-    text = PasswordField('text', validators=[DataRequired()])
+    text = StringField('text', validators=[DataRequired()])
     submit = SubmitField('Publish')

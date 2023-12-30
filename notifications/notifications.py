@@ -2,8 +2,6 @@ import datetime
 from flask import Flask, request, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
-
-
 app = Flask(__name__)
 # database location ///- this folder
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notifications.sqlite'
@@ -38,7 +36,6 @@ with app.app_context():
     db.session.commit()
 
 users = [{"name": "marko", "age": "33", "id": "123153765"}, {"name": "marko", "age": "33", "id": "123153765"}]
-news = [{"title": "GDP jumps 10 times", "text": "GDP of astocka hase increased 10 times"}]
 
 
 @app.route("/", methods=['GET'])
@@ -50,19 +47,18 @@ def generate_user():
 def set_notifications():
     all_notifications = Notifications.query.all()
     result = [notification.serialize() for notification in all_notifications]
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 @app.route("/notifications/create", methods=['POST'])
 def get_notifications():
-    notifications=Notifications()
-    notifications.title = 'test1title'
-    notifications.text = 'text2test'
-    db.session.add(notifications)
+    notification1 = Notifications()
+    notification1.title = 'test1title'
+    notification1.text = 'text2test'
+    db.session.add(notification1)
     db.session.commit()
     all_users = db.session.execute(db.select(Notifications)).scalar()
-    return jsonify([all_users.title,all_users.text])
-
+    return jsonify([all_users.title, all_users.text])
 
 
 @app.route("/api/notifications", methods=['GET', 'POST'])
@@ -70,11 +66,16 @@ def users_change():
     if request.method == 'POST':
         title = request.form['title']
         text = request.form['text']
-        news.append({"title": title, "text": text})
-        return make_response(jsonify(news), 200)
+        notification1 = Notifications()
+        notification1.title = title
+        notification1.text = text
+        db.session.add(notification1)
+        db.session.commit()
 
-    if request.method == 'GET':
-        return make_response(jsonify(news), 200)
+    all_notifications = Notifications.query.all()
+    result = [notification.serialize() for notification in all_notifications]
+    return make_response(jsonify(result), 200)
+
 
 
 if __name__ == "__main__":
