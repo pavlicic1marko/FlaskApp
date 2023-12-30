@@ -12,7 +12,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #5f788a;
 }
 
-.site-header .navbar-nav .nav-link {
+.site-header .nav-link {
   color: #cbd5db;
 }
 
@@ -77,4 +77,10 @@ a.article-title:hover {
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+[class="navbar-nav"]{
+  font-size: 18px;
+  background-color: blue;
+  right: 0;
 }
