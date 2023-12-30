@@ -15,7 +15,7 @@ backend = "http://127.0.0.1:5000/api/notifications"
 @app.route('/home', methods=['GET'])
 def home():
     user_data = get_user_data()
-    return render_template('test.html', user_data=user_data, title='BEST')
+    return render_template('home.html', user_data=user_data, title='BEST')
 
 
 @app.route('/notifications', methods=['GET', 'POST'])
@@ -26,7 +26,6 @@ def news():
         text = form.text.data
         response = requests.post(backend, data={"title": title, "text": text})
         return render_template('notifications.html', notifications_data=response.json(), title='Notifications', form=form)
-
 
     if request.method == 'GET':
 
@@ -59,9 +58,11 @@ def get_user_data():
     response = requests.get(random_microservice_url)
     return response.json()
 
+
 def get_notifications_list():
     response = requests.get(backend)
     return response.json()
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=80)
