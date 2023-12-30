@@ -14,7 +14,7 @@ class Notifications(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(40), nullable=False)
     text = db.Column(db.Text, nullable=False)
-    date_created = db.Column(db.DateTime, nullable=True)
+    date_created = db.Column(db.DateTime, nullable=True, default=datetime.datetime.utcnow)
 
     def __repr__(self):
         return f"User('{self.title}','{self.text}')"
@@ -24,14 +24,15 @@ class Notifications(db.Model):
             'id': self.id,
             'title': self.title,
             'text': self.text,
+            'date': self.date_created
         }
 
 
 with app.app_context():
     db.create_all()
     notifications = Notifications()
-    notifications.title = 'starttest1title'
-    notifications.text = 'starttext2test'
+    notifications.title = 'refactor app'
+    notifications.text = 'test 1234'
     db.session.add(notifications)
     db.session.commit()
 
@@ -51,6 +52,7 @@ def set_notifications():
 
 
 @app.route("/notifications/create", methods=['POST'])
+# TODO remove, change in postman
 def get_notifications():
     notification1 = Notifications()
     notification1.title = 'test1title'

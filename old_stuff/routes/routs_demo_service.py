@@ -1,5 +1,5 @@
 from flask import Flask
-from routes.user_routs import user_blueprint
+from old_stuff.routes.user_routs import user_blueprint
 
 app = Flask(__name__)
 app.register_blueprint(user_blueprint)
