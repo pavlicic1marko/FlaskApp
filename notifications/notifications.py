@@ -76,8 +76,10 @@ def users_change():
 
     all_notifications = Notifications.query.all()
     result = [notification.serialize() for notification in all_notifications]
-    return make_response(jsonify(result), 200)
+    response = make_response(jsonify(result), 200)
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST"
 
+    return response
 
 
 if __name__ == "__main__":
