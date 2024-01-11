@@ -6,7 +6,7 @@ from notifications.models.user import Notifications
 users = [{"name": "marko", "age": "33", "id": "123153765"}, {"name": "marko", "age": "33", "id": "123153765"}]
 
 
-@app.route("/", methods=['GET'])
+@app.route("/users", methods=['GET'])
 def generate_user():
     return users
 
@@ -16,6 +16,15 @@ def set_notifications():
     all_notifications = Notifications.query.all()
     result = [notification.serialize() for notification in all_notifications]
     return jsonify(result), 200
+
+
+@app.route("/notifications/<user_id>", methods=['GET', 'DELETE'])
+def get_or_delete_notification_by_id(user_id):
+    if request.method == 'GET':
+        result = Notifications.query.filter_by(id=user_id).first().serialize()
+        return jsonify(result), 200
+
+
 
 
 @app.route("/notifications/create", methods=['POST'])
