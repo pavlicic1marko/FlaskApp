@@ -24,6 +24,17 @@ def get_or_delete_notification_by_id(user_id):
         result = Notifications.query.filter_by(id=user_id).first().serialize()
         return jsonify(result), 200
 
+    if request.method == 'DELETE':
+        result = Notifications.query.filter_by(id=user_id).delete()
+        if result == 0:
+            return 'there is no notification with id:'+user_id, 404
+        if result == 1:
+            db.session.commit()
+            return 'deleted notification with id:'+user_id, 201
+        return 'Error', 500
+
+
+
 
 
 
