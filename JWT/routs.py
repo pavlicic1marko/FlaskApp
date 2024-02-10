@@ -37,11 +37,14 @@ def token_required(f):
 
         try:
             # decoding the payload to fetch the stored details
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms="HS256" )
+            test = 'test'
             current_user = User.query \
                 .filter_by(public_id=data['public_id']) \
                 .first()
-        except:
+
+        except Exception as e:
+            print(e)
             return jsonify({
                 'message': 'Token is invalid !!'
             }), 401
@@ -78,9 +81,10 @@ def get_all_users(current_user):
 @app.route('/login', methods=['POST'])
 def login():
     # creates dictionary of form data
-    auth = request.form
+    email = request.form['email']
+    password = request.form['password']
 
-    if not auth or not auth.get('email') or not auth.get('password'):
+    if not request or not email or not password:
         # returns 401 if any email or / and password is missing
         return make_response(
             'Could not verify',
@@ -89,7 +93,7 @@ def login():
         )
 
     user = User.query \
-        .filter_by(email=auth.get('email')) \
+        .filter_by(email=email) \
         .first()
 
     if not user:
@@ -100,14 +104,14 @@ def login():
             {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
         )
 
-    if check_password_hash(user.password, auth.get('password')):
+    if check_password_hash(user.password, password):
         # generates the JWT Token
         token = jwt.encode({
             'public_id': user.public_id,
             'exp': datetime.utcnow() + timedelta(minutes=30)
-        }, app.config['SECRET_KEY'])
+        }, app.config['SECRET_KEY'], "HS256")
 
-        return make_response(jsonify({'token': token.decode('UTF-8')}), 201)
+        return make_response(jsonify({'token': token}), 201)
     # returns 403 if password is wrong
     return make_response(
         'Could not verify',
@@ -121,9 +125,10 @@ def login():
 def signup_user():
     name = request.form['name']
     password = request.form['password']
-    hashed_password = generate_password_hash(password)
+    email = request.form['email']
+    hashed_password = generate_password_hash(password, method='HS256')
 
-    new_user = User(public_id=str(uuid.uuid4()), name=name, password=hashed_password)
+    new_user = User(public_id=str(uuid.uuid4()), name=name, password=hashed_password, email=email)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'registered successfully'})
