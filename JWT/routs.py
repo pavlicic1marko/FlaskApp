@@ -117,32 +117,13 @@ def login():
 
 
 # signup route
-@app.route('/signup', methods=['POST'])
-def signup():
-    # creates a dictionary of the form data
-    data = request.form
+@app.route('/register', methods=['POST'])
+def signup_user():
+    name = request.form['name']
+    password = request.form['password']
+    hashed_password = generate_password_hash(password)
 
-    # gets name, email and password
-    name, email = data.get('name'), data.get('email')
-    password = data.get('password')
-
-    # checking for existing user
-    user = User.query \
-        .filter_by(email=email) \
-        .first()
-    if not user:
-        # database ORM object
-        user = User(
-            public_id=str(uuid.uuid4()),
-            name=name,
-            email=email,
-            password=generate_password_hash(password)
-        )
-        # insert user
-        db.session.add(user)
-        db.session.commit()
-
-        return make_response('Successfully registered.', 201)
-    else:
-        # returns 202 if user already exists
-        return make_response('User already exists. Please Log in.', 202)
+    new_user = User(public_id=str(uuid.uuid4()), name=name, password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'registered successfully'})
