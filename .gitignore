@@ -2,3 +2,4 @@
 .sqlite
 /instance/site.db
 /venv/
+/instance/users.sqlite
